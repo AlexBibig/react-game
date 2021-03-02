@@ -1,0 +1,17 @@
+.MainPicture {
+  order: 2;
+  flex: 0 1 50%;
+  position: relative;
+  overflow: hidden;
+  .hangman-image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    height: auto;
+  }
+  .hangman-image.win {
+    width: 150px;
+  }
+}

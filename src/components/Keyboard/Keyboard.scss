@@ -1,0 +1,31 @@
+.Keyboard {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-areas:
+    '. . . .'
+    '. . . .'
+    '. . . .';
+  order: 3;
+  flex: 0 1 auto;
+  button {
+    color: black;
+    margin: 8px;
+  }
+  #vowel {
+    background: linear-gradient(to top, #c1dfc4 0%, #deecdd 100%);
+  }
+  #vowel:hover {
+    transform: scale(1.1);
+  }
+  #consonant {
+    background: linear-gradient(
+      -20deg,
+      #ddd6f3 0%,
+      #faaca8 100%,
+      #faaca8 100%
+    );
+  }
+  #consonant:hover {
+    transform: scale(1.1);
+  }
+}
