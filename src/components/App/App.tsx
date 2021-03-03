@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import HangmanGame from '../HangmanGame';
+import Game from '../Game';
 import PauseMenu from '../PauseMenu';
-import rsSchoolLogo from '../../assets/img/rs_school_logo.svg';
-import { getCountry } from '../words';
+import Footer from '../Footer';
+import Header from '../Header';
+import { getAllCountries, getEuropeanCountries } from '../API';
 
 import './App.scss';
 
@@ -10,7 +11,7 @@ interface defaultSettingsTypes {
   gamePaused: boolean;
   easyMode: boolean;
   freeVowels: boolean;
-  darkMode: boolean;
+  europeanCountries: boolean;
   sound: boolean;
 }
 
@@ -23,7 +24,7 @@ const App: React.FunctionComponent = () => {
       gamePaused: true,
       easyMode: true,
       freeVowels: true,
-      darkMode: false,
+      europeanCountries: false,
       sound: true,
     };
   });
@@ -37,9 +38,33 @@ const App: React.FunctionComponent = () => {
 
   useEffect(() => {
     setCountry();
-  }, []);
+  }, [defaultSettings.europeanCountries]);
+
+  // useEffect(() => {
+  //   const defaultSettings: any =
+  //     localStorage.getItem('defaultSettings') || null;
+  //   if (defaultSettings) {
+  //     setDefaultSettings(JSON.parse(defaultSettings));
+  //   }
+  //   const keyWord: any = localStorage.getItem('keyWord') || null;
+  //   if (keyWord) {
+  //     setDefaultSettings(JSON.parse(keyWord));
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   localStorage.setItem(
+  //     'defaultSettings',
+  //     JSON.stringify(defaultSettings),
+  //   );
+  //   localStorage.setItem('keyWord', JSON.stringify(keyWord));
+  // }, [defaultSettings, keyWord]);
 
   const setCountry = async () => {
+    const getCountry = !defaultSettings.europeanCountries
+      ? getAllCountries
+      : getEuropeanCountries;
+
     await getCountry().then((country) => {
       setKeyWord({
         countryName: country.name.trim().toLowerCase(),
@@ -57,6 +82,15 @@ const App: React.FunctionComponent = () => {
     });
   };
 
+  const toggleFreeVowels = () => {
+    setDefaultSettings((prevState: defaultSettingsTypes) => {
+      return {
+        ...prevState,
+        freeVowels: !prevState.freeVowels,
+      };
+    });
+  };
+
   const toggleEasyMode = () => {
     setDefaultSettings((prevState: defaultSettingsTypes) => {
       return {
@@ -66,38 +100,47 @@ const App: React.FunctionComponent = () => {
     });
   };
 
+  const toggleEuropeanCountries = () => {
+    setDefaultSettings((prevState: defaultSettingsTypes) => {
+      return {
+        ...prevState,
+        europeanCountries: !prevState.europeanCountries,
+      };
+    });
+  };
+
   return (
     <div className='App'>
-      <div className='container'>
+      <Header
+        toggleGamePause={toggleGamePause}
+        setCountry={setCountry}
+      />
+
+      <main className='container'>
         {!defaultSettings.gamePaused ? (
-          <HangmanGame
+          <Game
             countryName={keyWord.countryName}
             countryFlag={keyWord.countryFlag}
             maxMistakes={maxMistakes}
             easyMode={defaultSettings.easyMode}
+            freeVowels={defaultSettings.freeVowels}
             setCountry={setCountry}
           />
         ) : (
           <PauseMenu
-            toggleGamePause={toggleGamePause}
             toggleEasyMode={toggleEasyMode}
+            toggleFreeVowels={toggleFreeVowels}
+            toggleEuropeanCountries={toggleEuropeanCountries}
+            toggleGamePause={toggleGamePause}
+            setCountry={setCountry}
+            easyMode={defaultSettings.easyMode}
+            freeVowels={defaultSettings.freeVowels}
+            europeanCountries={defaultSettings.europeanCountries}
           />
         )}
-      </div>
+      </main>
 
-      <footer>
-        <div>
-          <p>2021</p>
-        </div>
-        <div>
-          <a href='https://github.com/AlexBibig'>
-            github.com/AlexBibig
-          </a>
-        </div>
-        <div>
-          <img src={rsSchoolLogo} alt='' />
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

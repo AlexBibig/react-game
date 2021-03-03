@@ -7718,6 +7718,11 @@
   dependencies:
     "object-visit" "^1.0.0"
 
+"material-icons@^0.5.3":
+  "integrity" "sha512-LL4pqS7/wX/LmeVkqpmEQX2LFIC8BBoQO6NDZKmItg/MgsW1BpzHJX+YR1S0tmgGh5WnhIn7ZJCKvj8MT3Liew=="
+  "resolved" "https://registry.npmjs.org/material-icons/-/material-icons-0.5.3.tgz"
+  "version" "0.5.3"
+
 "materialize-css@^1.0.0-rc.2":
   "integrity" "sha512-FuQmSyq4Qv0ov7A2qXw0E6/jbQzSWx2P1pg2/XQDYTkkSc/GyiFAxu3fw9zgShwuTvyumEiw5jkxQWT9siqMBQ=="
   "resolved" "https://registry.npmjs.org/materialize-css/-/materialize-css-1.0.0-rc.2.tgz"

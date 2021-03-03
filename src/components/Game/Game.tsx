@@ -1,30 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import MainPicture from '../MainPicture';
+import Hangman from '../Hangman';
 import Keyboard from '../Keyboard';
-import HiddenWord from '../HiddenWord';
-import GameInfo from '../GameInfo';
-import GameOverWindow from '../GameOverWindow';
-import './HangmanGame.scss';
+import Answer from '../Answer';
+import Indicators from '../Indicators';
+import FinalPopUp from '../FinalPopUp';
+import './Game.scss';
 import { Fade } from 'react-awesome-reveal';
-import { getCountry } from '../words';
 
 interface PropTypes {
   maxMistakes: number;
   easyMode: boolean;
+  freeVowels: boolean;
   countryName: string;
   countryFlag: string;
   setCountry: any;
 }
 
-interface KeyWordTypes {
-  countryName: string;
-  countryFlag: string;
-}
-
-const HangmanGame: React.FunctionComponent<PropTypes> = (props) => {
+const Game: React.FunctionComponent<PropTypes> = (props) => {
   const {
     maxMistakes,
     easyMode,
+    freeVowels,
     countryName,
     countryFlag,
     setCountry,
@@ -32,25 +28,45 @@ const HangmanGame: React.FunctionComponent<PropTypes> = (props) => {
 
   const [mistakesCounter, setMistakesCounter] = useState<number>(0);
   const [score, setScore] = useState<number>(0);
-  const [pushedLetters, setPushedLetters] = useState<any>(new Set());
-  const [remainingLetters, setRemainingLetters] = useState<any>(
-    new Set(countryName.trim().toLowerCase().split('')),
+  const [pushedLetters, setPushedLetters] = useState<Array<string>>(
+    [],
   );
+  const [remainingLetters, setRemainingLetters] = useState<
+    Array<string>
+  >([]);
 
   useEffect(() => {
     setRemainingLetters(
-      new Set(countryName.trim().toLowerCase().split('')),
+      Array.from(new Set(countryName.trim().toLowerCase().split(''))),
     );
   }, [countryName]);
 
+  // useEffect(() => {
+  //   const defaultSettings: any =
+  //     localStorage.getItem('defaultSettings') || null;
+  //   if (defaultSettings) {
+  //     setDefaultSettings(JSON.parse(defaultSettings));
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   localStorage.setItem(
+  //     'defaultSettings',
+  //     JSON.stringify(defaultSettings),
+  //   );
+  // }, [score]);
+
   const handleGuess = (e: any) => {
     const letter: string = e.target.innerHTML;
-    setPushedLetters(pushedLetters.add(letter));
-    if (remainingLetters.has(letter)) {
-      setRemainingLetters((prevSet: any) => {
-        prevSet.delete(letter);
-        return prevSet;
-      });
+    setPushedLetters((prevArr: any) => {
+      prevArr.push(letter);
+      return prevArr;
+    });
+
+    if (remainingLetters.includes(letter)) {
+      setRemainingLetters(
+        remainingLetters.filter((el: any) => el !== letter),
+      );
       setScore((prevValue: number) => prevValue + 100);
     } else {
       setScore((prevValue: number) => prevValue - 10);
@@ -66,15 +82,14 @@ const HangmanGame: React.FunctionComponent<PropTypes> = (props) => {
     }
     setCountry();
     setMistakesCounter(0);
-
-    setPushedLetters(new Set());
+    setPushedLetters([]);
   };
 
   const checkGameStatus = () => {
     if (mistakesCounter < maxMistakes) {
-      if (!remainingLetters.size) {
+      if (!remainingLetters.length) {
         return (
-          <GameOverWindow
+          <FinalPopUp
             gameStatus={'game-status win'}
             setNewGame={setNewGame}
             keyWord={countryName.toUpperCase()}
@@ -83,7 +98,7 @@ const HangmanGame: React.FunctionComponent<PropTypes> = (props) => {
       }
     } else {
       return (
-        <GameOverWindow
+        <FinalPopUp
           gameStatus={'game-status lose'}
           setNewGame={setNewGame}
           keyWord={countryName.toUpperCase()}
@@ -92,24 +107,20 @@ const HangmanGame: React.FunctionComponent<PropTypes> = (props) => {
     }
   };
 
-  console.log(countryName);
-  console.log(pushedLetters);
-  console.log(remainingLetters);
-
   return (
-    <div className='HangmanGame'>
-      <MainPicture
+    <div className='Game'>
+      <Hangman
         mistakesCounter={mistakesCounter}
         remainingLetters={remainingLetters}
         easyMode={easyMode}
       />
 
-      <HiddenWord
+      <Answer
         keyWord={countryName}
         remainingLetters={remainingLetters}
       />
 
-      <GameInfo
+      <Indicators
         mistakesCounter={mistakesCounter}
         maxMistakes={maxMistakes}
         score={score}
@@ -122,6 +133,7 @@ const HangmanGame: React.FunctionComponent<PropTypes> = (props) => {
         mistakesCounter={mistakesCounter}
         maxMistakes={maxMistakes}
         remainingLetters={remainingLetters}
+        freeVowels={freeVowels}
       />
 
       <Fade
@@ -144,4 +156,4 @@ const HangmanGame: React.FunctionComponent<PropTypes> = (props) => {
   );
 };
 
-export default HangmanGame;
+export default Game;

@@ -1,5 +1,5 @@
 import React from 'react';
-import './GameOverWindow.scss';
+import './FinalPopUp.scss';
 
 interface PropTypes {
   gameStatus: string;
@@ -7,12 +7,10 @@ interface PropTypes {
   keyWord?: string;
 }
 
-const GameOverWindow: React.FunctionComponent<PropTypes> = (
-  props,
-) => {
+const FinalPopUp: React.FunctionComponent<PropTypes> = (props) => {
   const { gameStatus, setNewGame, keyWord } = props;
   return (
-    <div className='GameOverWindow'>
+    <div className='FinalPopUp'>
       <h2>
         {gameStatus === 'game-status win' ? 'You win' : 'You lose'}
       </h2>
@@ -34,4 +32,4 @@ const GameOverWindow: React.FunctionComponent<PropTypes> = (
   );
 };
 
-export default GameOverWindow;
+export default FinalPopUp;

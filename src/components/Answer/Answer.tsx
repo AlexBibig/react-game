@@ -1,5 +1,5 @@
 import React from 'react';
-import './HiddenWord.scss';
+import './Answer.scss';
 import { Fade } from 'react-awesome-reveal';
 
 interface PropTypes {
@@ -7,10 +7,10 @@ interface PropTypes {
   remainingLetters: any;
 }
 
-const HiddenWord: React.FunctionComponent<PropTypes> = (props) => {
+const Answer: React.FunctionComponent<PropTypes> = (props) => {
   const { keyWord, remainingLetters } = props;
   return (
-    <div className='HiddenWord'>
+    <div className='Answer'>
       <Fade direction={'up'}>
         <ul>
           {keyWord.split('').map((el: string, index: number) => {
@@ -18,7 +18,8 @@ const HiddenWord: React.FunctionComponent<PropTypes> = (props) => {
               <li
                 key={index}
                 className={
-                  remainingLetters.has(el)
+                  // remainingLetters.has(el)
+                  remainingLetters.includes(el)
                     ? 'closed-letter'
                     : 'open-letter'
                 }
@@ -33,4 +34,4 @@ const HiddenWord: React.FunctionComponent<PropTypes> = (props) => {
   );
 };
 
-export default HiddenWord;
+export default Answer;

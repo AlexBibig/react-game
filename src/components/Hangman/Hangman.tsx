@@ -1,5 +1,5 @@
 import React from 'react';
-import './MainPicture.scss';
+import './Hangman.scss';
 import { useTransition, animated } from 'react-spring';
 import { Spring } from 'react-spring/renderprops';
 
@@ -18,7 +18,7 @@ interface PropTypes {
   easyMode: boolean;
 }
 
-const MainPicture: React.FunctionComponent<PropTypes> = (props) => {
+const Hangman: React.FunctionComponent<PropTypes> = (props) => {
   const { mistakesCounter, remainingLetters, easyMode } = props;
 
   const winImage: string = success;
@@ -45,8 +45,8 @@ const MainPicture: React.FunctionComponent<PropTypes> = (props) => {
   );
 
   return (
-    <div className='MainPicture'>
-      {remainingLetters.size !== 0 ? (
+    <div className='Hangman'>
+      {remainingLetters.length !== 0 ? (
         transitions.map(({ item, props, key }) => (
           <animated.img
             className='hangman-image'
@@ -76,4 +76,4 @@ const MainPicture: React.FunctionComponent<PropTypes> = (props) => {
   );
 };
 
-export default MainPicture;
+export default Hangman;

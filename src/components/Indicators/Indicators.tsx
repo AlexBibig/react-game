@@ -1,5 +1,5 @@
 import React from 'react';
-import './GameInfo.scss';
+import './Indicators.scss';
 import { useTransition, animated } from 'react-spring';
 import { Zoom } from 'react-awesome-reveal';
 
@@ -10,7 +10,7 @@ interface PropTypes {
   countryFlag: string;
 }
 
-const GameInfo: React.FunctionComponent<PropTypes> = (props) => {
+const Indicators: React.FunctionComponent<PropTypes> = (props) => {
   const { mistakesCounter, maxMistakes, score, countryFlag } = props;
 
   const transitions = useTransition(countryFlag, (item) => item, {
@@ -20,7 +20,7 @@ const GameInfo: React.FunctionComponent<PropTypes> = (props) => {
   });
 
   return (
-    <div className='GameInfo'>
+    <div className='Indicators'>
       <Zoom>
         <div className='statistics'>
           <p>
@@ -45,4 +45,4 @@ const GameInfo: React.FunctionComponent<PropTypes> = (props) => {
   );
 };
 
-export default GameInfo;
+export default Indicators;

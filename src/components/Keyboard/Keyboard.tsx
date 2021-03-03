@@ -4,10 +4,11 @@ import { Zoom } from 'react-awesome-reveal';
 
 interface PropTypes {
   handleGuess: any;
-  pushedLetters: any;
-  remainingLetters: any;
+  pushedLetters: Array<string>;
+  remainingLetters: Array<string>;
   mistakesCounter: number;
   maxMistakes: number;
+  freeVowels: boolean;
 }
 
 const Keyboard: React.FunctionComponent<PropTypes> = (props) => {
@@ -17,6 +18,7 @@ const Keyboard: React.FunctionComponent<PropTypes> = (props) => {
     mistakesCounter,
     maxMistakes,
     remainingLetters,
+    freeVowels,
   } = props;
 
   const letters: Array<string> = [
@@ -55,15 +57,18 @@ const Keyboard: React.FunctionComponent<PropTypes> = (props) => {
           <button
             key={index}
             onClick={handleGuess}
-            onKeyDown={handleGuess}
             disabled={
-              pushedLetters.has(letter) ||
+              pushedLetters.includes(letter) ||
               mistakesCounter >= maxMistakes ||
-              !remainingLetters.size
+              !remainingLetters.length
             }
-            id={'aeiou'.includes(letter) ? 'vowel' : 'consonant'}
+            id={
+              'aeiou'.includes(letter) && freeVowels
+                ? 'vowel'
+                : 'consonant'
+            }
             className={
-              'btn-floating btn-large waves-effect waves-light'
+              'btn-floating btn-large waves-effect waves-teal'
             }
           >
             {letter}
