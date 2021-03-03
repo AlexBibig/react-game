@@ -13,7 +13,7 @@ interface PropTypes {
   freeVowels: boolean;
   countryName: string;
   countryFlag: string;
-  setCountry: any;
+  setCountry: () => void;
 }
 
 const Game: React.FunctionComponent<PropTypes> = (props) => {
@@ -58,14 +58,14 @@ const Game: React.FunctionComponent<PropTypes> = (props) => {
 
   const handleGuess = (e: any) => {
     const letter: string = e.target.innerHTML;
-    setPushedLetters((prevArr: any) => {
+    setPushedLetters((prevArr: Array<string>) => {
       prevArr.push(letter);
       return prevArr;
     });
 
     if (remainingLetters.includes(letter)) {
       setRemainingLetters(
-        remainingLetters.filter((el: any) => el !== letter),
+        remainingLetters.filter((el: string) => el !== letter),
       );
       setScore((prevValue: number) => prevValue + 100);
     } else {

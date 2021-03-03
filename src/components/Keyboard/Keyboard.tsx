@@ -53,7 +53,7 @@ const Keyboard: React.FunctionComponent<PropTypes> = (props) => {
   return (
     <div className='Keyboard'>
       <Zoom>
-        {letters.map((letter, index) => (
+        {letters.map((letter: string, index: number) => (
           <button
             key={index}
             onClick={handleGuess}

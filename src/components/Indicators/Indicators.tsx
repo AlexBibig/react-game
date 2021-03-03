@@ -13,11 +13,15 @@ interface PropTypes {
 const Indicators: React.FunctionComponent<PropTypes> = (props) => {
   const { mistakesCounter, maxMistakes, score, countryFlag } = props;
 
-  const transitions = useTransition(countryFlag, (item) => item, {
-    from: { position: 'absolute', opacity: 0, transition: '0.3s' },
-    enter: { opacity: 1, transition: '0.3s' },
-    leave: { opacity: 0, transition: '0.3s' },
-  });
+  const transitions = useTransition(
+    countryFlag,
+    (item: string) => item,
+    {
+      from: { position: 'absolute', opacity: 0, transition: '0.3s' },
+      enter: { opacity: 1, transition: '0.3s' },
+      leave: { opacity: 0, transition: '0.3s' },
+    },
+  );
 
   return (
     <div className='Indicators'>

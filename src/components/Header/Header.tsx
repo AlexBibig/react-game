@@ -1,9 +1,13 @@
 import React from 'react';
 import './Header.scss';
 
-const Header: React.FunctionComponent<any> = ({
-  toggleGamePause,
-}) => {
+interface PropTypes {
+  toggleGamePause: () => void;
+}
+
+const Header: React.FunctionComponent<PropTypes> = (props) => {
+  const { toggleGamePause } = props;
+
   return (
     <header className='Header'>
       <button

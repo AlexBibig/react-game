@@ -3,12 +3,13 @@ import './FinalPopUp.scss';
 
 interface PropTypes {
   gameStatus: string;
-  setNewGame: any;
+  setNewGame: () => void;
   keyWord?: string;
 }
 
 const FinalPopUp: React.FunctionComponent<PropTypes> = (props) => {
   const { gameStatus, setNewGame, keyWord } = props;
+
   return (
     <div className='FinalPopUp'>
       <h2>

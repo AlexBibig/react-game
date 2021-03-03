@@ -4,11 +4,12 @@ import { Fade } from 'react-awesome-reveal';
 
 interface PropTypes {
   keyWord: string;
-  remainingLetters: any;
+  remainingLetters: Array<string>;
 }
 
 const Answer: React.FunctionComponent<PropTypes> = (props) => {
   const { keyWord, remainingLetters } = props;
+
   return (
     <div className='Answer'>
       <Fade direction={'up'}>
@@ -18,7 +19,6 @@ const Answer: React.FunctionComponent<PropTypes> = (props) => {
               <li
                 key={index}
                 className={
-                  // remainingLetters.has(el)
                   remainingLetters.includes(el)
                     ? 'closed-letter'
                     : 'open-letter'

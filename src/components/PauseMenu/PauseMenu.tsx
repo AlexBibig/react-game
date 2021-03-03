@@ -1,17 +1,29 @@
 import React from 'react';
-
 import './PauseMenu.scss';
 
-const PauseMenu: React.FunctionComponent<any> = ({
-  toggleGamePause,
-  toggleEasyMode,
-  toggleFreeVowels,
-  toggleEuropeanCountries,
-  setCountry,
-  easyMode,
-  freeVowels,
-  europeanCountries,
-}) => {
+interface PropTypes {
+  toggleGamePause: () => void;
+  toggleEasyMode: () => void;
+  toggleFreeVowels: () => void;
+  toggleEuropeanCountries: () => void;
+  setCountry: () => void;
+  easyMode: boolean;
+  freeVowels: boolean;
+  europeanCountries: boolean;
+}
+
+const PauseMenu: React.FunctionComponent<PropTypes> = (props) => {
+  const {
+    toggleGamePause,
+    toggleEasyMode,
+    toggleFreeVowels,
+    toggleEuropeanCountries,
+    setCountry,
+    easyMode,
+    freeVowels,
+    europeanCountries,
+  } = props;
+
   return (
     <div className='PauseMenu'>
       <button

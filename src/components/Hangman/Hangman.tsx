@@ -14,7 +14,7 @@ import success from '../../assets/img/Success.png';
 
 interface PropTypes {
   mistakesCounter: number;
-  remainingLetters: any;
+  remainingLetters: Array<string>;
   easyMode: boolean;
 }
 
@@ -22,6 +22,7 @@ const Hangman: React.FunctionComponent<PropTypes> = (props) => {
   const { mistakesCounter, remainingLetters, easyMode } = props;
 
   const winImage: string = success;
+
   const imagesArr: Array<string> = easyMode
     ? [
         hangman0,
@@ -36,7 +37,7 @@ const Hangman: React.FunctionComponent<PropTypes> = (props) => {
 
   const transitions = useTransition(
     imagesArr[mistakesCounter],
-    (item) => item,
+    (item: string) => item,
     {
       from: { opacity: 0, transition: '0.3s' },
       enter: { opacity: 1, transition: '0.3s' },

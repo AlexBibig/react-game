@@ -111,10 +111,7 @@ const App: React.FunctionComponent = () => {
 
   return (
     <div className='App'>
-      <Header
-        toggleGamePause={toggleGamePause}
-        setCountry={setCountry}
-      />
+      <Header toggleGamePause={toggleGamePause} />
 
       <main className='container'>
         {!defaultSettings.gamePaused ? (
