@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useLayoutEffect } from 'react';
 import Game from '../Game';
 import PauseMenu from '../PauseMenu';
 import Footer from '../Footer';
 import Header from '../Header';
 import { getAllCountries, getEuropeanCountries } from '../API';
-
 import './App.scss';
 
 interface defaultSettingsTypes {
@@ -12,7 +11,9 @@ interface defaultSettingsTypes {
   easyMode: boolean;
   freeVowels: boolean;
   europeanCountries: boolean;
-  sound: boolean;
+  volume: number;
+  muted: boolean;
+  music: boolean;
 }
 
 const App: React.FunctionComponent = () => {
@@ -25,7 +26,9 @@ const App: React.FunctionComponent = () => {
       easyMode: true,
       freeVowels: true,
       europeanCountries: false,
-      sound: true,
+      volume: 1,
+      muted: false,
+      music: true,
     };
   });
 
@@ -36,29 +39,28 @@ const App: React.FunctionComponent = () => {
 
   const maxMistakes: number = defaultSettings.easyMode ? 6 : 4;
 
-  useEffect(() => {
-    setCountry();
-  }, [defaultSettings.europeanCountries]);
+  useLayoutEffect(() => {
+    const keyWord: any = localStorage.getItem('keyWord') || null;
+    if (keyWord) {
+      setKeyWord(JSON.parse(keyWord));
+    } else {
+      setCountry();
+      localStorage.clear();
+    }
+    const defaultSettings: any =
+      localStorage.getItem('defaultSettings') || null;
+    if (defaultSettings) {
+      setDefaultSettings(JSON.parse(defaultSettings));
+    }
+  }, []);
 
-  // useEffect(() => {
-  //   const defaultSettings: any =
-  //     localStorage.getItem('defaultSettings') || null;
-  //   if (defaultSettings) {
-  //     setDefaultSettings(JSON.parse(defaultSettings));
-  //   }
-  //   const keyWord: any = localStorage.getItem('keyWord') || null;
-  //   if (keyWord) {
-  //     setDefaultSettings(JSON.parse(keyWord));
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   localStorage.setItem(
-  //     'defaultSettings',
-  //     JSON.stringify(defaultSettings),
-  //   );
-  //   localStorage.setItem('keyWord', JSON.stringify(keyWord));
-  // }, [defaultSettings, keyWord]);
+  useLayoutEffect(() => {
+    localStorage.setItem(
+      'defaultSettings',
+      JSON.stringify(defaultSettings),
+    );
+    localStorage.setItem('keyWord', JSON.stringify(keyWord));
+  }, [defaultSettings, keyWord]);
 
   const setCountry = async () => {
     const getCountry = !defaultSettings.europeanCountries
@@ -70,6 +72,33 @@ const App: React.FunctionComponent = () => {
         countryName: country.name.trim().toLowerCase(),
         countryFlag: country.flag,
       });
+    });
+  };
+
+  const setVolumeLevel = (value: any) => {
+    setDefaultSettings((prevState: defaultSettingsTypes) => {
+      return {
+        ...prevState,
+        volume: value,
+      };
+    });
+  };
+
+  const setMuted = () => {
+    setDefaultSettings((prevState: defaultSettingsTypes) => {
+      return {
+        ...prevState,
+        muted: !prevState.muted,
+      };
+    });
+  };
+
+  const setMusic = () => {
+    setDefaultSettings((prevState: defaultSettingsTypes) => {
+      return {
+        ...prevState,
+        music: !prevState.music,
+      };
     });
   };
 
@@ -111,7 +140,15 @@ const App: React.FunctionComponent = () => {
 
   return (
     <div className='App'>
-      <Header toggleGamePause={toggleGamePause} />
+      <Header
+        toggleGamePause={toggleGamePause}
+        volumeLevel={defaultSettings.volume}
+        setVolumeLevel={setVolumeLevel}
+        setMuted={setMuted}
+        muted={defaultSettings.muted}
+        music={defaultSettings.music}
+        setMusic={setMusic}
+      />
 
       <main className='container'>
         {!defaultSettings.gamePaused ? (
@@ -122,6 +159,8 @@ const App: React.FunctionComponent = () => {
             easyMode={defaultSettings.easyMode}
             freeVowels={defaultSettings.freeVowels}
             setCountry={setCountry}
+            volumeLevel={defaultSettings.volume}
+            muted={defaultSettings.muted}
           />
         ) : (
           <PauseMenu

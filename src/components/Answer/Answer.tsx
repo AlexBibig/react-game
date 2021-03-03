@@ -1,6 +1,6 @@
 import React from 'react';
-import './Answer.scss';
 import { Fade } from 'react-awesome-reveal';
+import './Answer.scss';
 
 interface PropTypes {
   keyWord: string;

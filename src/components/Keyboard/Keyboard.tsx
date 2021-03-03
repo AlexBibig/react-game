@@ -1,6 +1,6 @@
 import React from 'react';
-import './Keyboard.scss';
 import { Zoom } from 'react-awesome-reveal';
+import './Keyboard.scss';
 
 interface PropTypes {
   handleGuess: any;

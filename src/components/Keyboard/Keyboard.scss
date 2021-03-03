@@ -7,25 +7,48 @@
     '. . . .';
   order: 3;
   flex: 0 1 auto;
+  margin: 0 auto;
+
   button {
     color: black;
     margin: 8px;
   }
   #vowel {
-    background: linear-gradient(to top, #c1dfc4 0%, #deecdd 100%);
+    background: linear-gradient(to top, #c1dfc4 0%, #26a69a 100%);
   }
   #vowel:hover {
     transform: scale(1.1);
   }
   #consonant {
-    background: linear-gradient(
-      -20deg,
-      #ddd6f3 0%,
-      #faaca8 100%,
-      #faaca8 100%
-    );
+    background: linear-gradient(-20deg, #d6b4a7 30%, tomato 100%);
   }
   #consonant:hover {
     transform: scale(1.1);
+  }
+}
+
+@media (max-width: 1050px) {
+  .Keyboard {
+    grid-template-columns: 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr;
+    grid-template-areas:
+      '. . . . . . . . .'
+      '. . . . . . . . .'
+      '. . . . . . . . .';
+    order: 4;
+    flex: 0 1 100%;
+    text-align: center;
+  }
+}
+
+@media (max-width: 700px) {
+  .Keyboard {
+    grid-template-columns: 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr 0.5fr;
+    grid-template-areas:
+      '. . . . . .'
+      '. . . . . .'
+      '. . . . . .';
+    order: 4;
+    flex: 0 1 100%;
+    text-align: center;
   }
 }

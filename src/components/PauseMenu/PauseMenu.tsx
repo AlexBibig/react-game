@@ -30,11 +30,11 @@ const PauseMenu: React.FunctionComponent<PropTypes> = (props) => {
         onClick={() => {
           setCountry();
           toggleGamePause();
+          localStorage.clear();
         }}
         className='waves-effect waves-light btn'
       >
-        <i className='material-icons'>autorenew</i>
-        refresh the country
+        New game
       </button>
 
       <span className='switch'>

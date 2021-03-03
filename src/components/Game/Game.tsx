@@ -4,8 +4,12 @@ import Keyboard from '../Keyboard';
 import Answer from '../Answer';
 import Indicators from '../Indicators';
 import FinalPopUp from '../FinalPopUp';
-import './Game.scss';
 import { Fade } from 'react-awesome-reveal';
+import './Game.scss';
+
+import useSound from 'use-sound';
+import selectClick from '../../assets/sounds/selectClick.mp3';
+import clickError from '../../assets/sounds/clickError.mp3';
 
 interface PropTypes {
   maxMistakes: number;
@@ -14,6 +18,8 @@ interface PropTypes {
   countryName: string;
   countryFlag: string;
   setCountry: () => void;
+  volumeLevel: number;
+  muted: boolean;
 }
 
 const Game: React.FunctionComponent<PropTypes> = (props) => {
@@ -24,70 +30,106 @@ const Game: React.FunctionComponent<PropTypes> = (props) => {
     countryName,
     countryFlag,
     setCountry,
+    volumeLevel,
+    muted,
   } = props;
 
-  const [mistakesCounter, setMistakesCounter] = useState<number>(0);
-  const [score, setScore] = useState<number>(0);
-  const [pushedLetters, setPushedLetters] = useState<Array<string>>(
-    [],
-  );
-  const [remainingLetters, setRemainingLetters] = useState<
-    Array<string>
-  >([]);
+  const [gameSettings, setGameSettings] = useState<any>({
+    mistakesCounter: 0,
+    score: 0,
+    pushedLetters: [],
+    remainingLetters: [],
+  });
+
+  const [playSuccess] = useSound(selectClick, {
+    volume: muted ? 0 : volumeLevel,
+  });
+  const [playFailure] = useSound(clickError, {
+    volume: muted ? 0 : volumeLevel,
+  });
 
   useEffect(() => {
-    setRemainingLetters(
-      Array.from(new Set(countryName.trim().toLowerCase().split(''))),
-    );
+    setGameSettings((prevState: any) => {
+      return {
+        ...prevState,
+        remainingLetters: Array.from(
+          new Set(countryName.trim().toLowerCase().split('')),
+        ),
+      };
+    });
   }, [countryName]);
 
-  // useEffect(() => {
-  //   const defaultSettings: any =
-  //     localStorage.getItem('defaultSettings') || null;
-  //   if (defaultSettings) {
-  //     setDefaultSettings(JSON.parse(defaultSettings));
-  //   }
-  // }, []);
+  useEffect(() => {
+    const gameSettings: any =
+      localStorage.getItem('gameSettings') || null;
+    if (gameSettings) {
+      setGameSettings(JSON.parse(gameSettings));
+    }
+  }, []);
 
-  // useEffect(() => {
-  //   localStorage.setItem(
-  //     'defaultSettings',
-  //     JSON.stringify(defaultSettings),
-  //   );
-  // }, [score]);
+  useEffect(() => {
+    localStorage.setItem(
+      'gameSettings',
+      JSON.stringify(gameSettings),
+    );
+  }, [][gameSettings.pushedLetters]);
 
-  const handleGuess = (e: any) => {
+  const handleGuess = (e: any): void => {
     const letter: string = e.target.innerHTML;
-    setPushedLetters((prevArr: Array<string>) => {
-      prevArr.push(letter);
-      return prevArr;
-    });
-
-    if (remainingLetters.includes(letter)) {
-      setRemainingLetters(
-        remainingLetters.filter((el: string) => el !== letter),
-      );
-      setScore((prevValue: number) => prevValue + 100);
+    if (gameSettings.remainingLetters.includes(letter)) {
+      playSuccess();
+      setGameSettings((prevState: any) => {
+        return {
+          ...prevState,
+          pushedLetters: prevState.pushedLetters.concat([letter]),
+          remainingLetters: prevState.remainingLetters.filter(
+            (el: string) => el !== letter,
+          ),
+          score: prevState.score + 100,
+        };
+      });
     } else {
-      setScore((prevValue: number) => prevValue - 10);
+      playFailure();
+      setGameSettings((prevState: any) => {
+        return {
+          ...prevState,
+          pushedLetters: prevState.pushedLetters.concat([letter]),
+          score: prevState.score - 10,
+        };
+      });
       if (e.target.id !== 'vowel') {
-        setMistakesCounter((prevValue: number) => prevValue + 1);
+        setGameSettings((prevState: any) => {
+          return {
+            ...prevState,
+            mistakesCounter: prevState.mistakesCounter + 1,
+          };
+        });
       }
     }
   };
 
-  const setNewGame = () => {
-    if (mistakesCounter >= maxMistakes) {
-      setScore(0);
-    }
+  const setNewGame = (): void => {
     setCountry();
-    setMistakesCounter(0);
-    setPushedLetters([]);
+    setGameSettings((prevState: any) => {
+      return {
+        ...prevState,
+        mistakesCounter: 0,
+        pushedLetters: [],
+      };
+    });
+    if (gameSettings.mistakesCounter >= maxMistakes) {
+      setGameSettings((prevState: any) => {
+        return {
+          ...prevState,
+          score: 0,
+        };
+      });
+    }
   };
 
   const checkGameStatus = () => {
-    if (mistakesCounter < maxMistakes) {
-      if (!remainingLetters.length) {
+    if (gameSettings.mistakesCounter < maxMistakes) {
+      if (!gameSettings.remainingLetters.length) {
         return (
           <FinalPopUp
             gameStatus={'game-status win'}
@@ -110,29 +152,29 @@ const Game: React.FunctionComponent<PropTypes> = (props) => {
   return (
     <div className='Game'>
       <Hangman
-        mistakesCounter={mistakesCounter}
-        remainingLetters={remainingLetters}
+        mistakesCounter={gameSettings.mistakesCounter}
+        remainingLetters={gameSettings.remainingLetters}
         easyMode={easyMode}
       />
 
       <Answer
         keyWord={countryName}
-        remainingLetters={remainingLetters}
+        remainingLetters={gameSettings.remainingLetters}
       />
 
       <Indicators
-        mistakesCounter={mistakesCounter}
+        mistakesCounter={gameSettings.mistakesCounter}
         maxMistakes={maxMistakes}
-        score={score}
+        score={gameSettings.score}
         countryFlag={countryFlag}
       />
 
       <Keyboard
         handleGuess={handleGuess}
-        pushedLetters={pushedLetters}
-        mistakesCounter={mistakesCounter}
+        pushedLetters={gameSettings.pushedLetters}
+        mistakesCounter={gameSettings.mistakesCounter}
         maxMistakes={maxMistakes}
-        remainingLetters={remainingLetters}
+        remainingLetters={gameSettings.remainingLetters}
         freeVowels={freeVowels}
       />
 

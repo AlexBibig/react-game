@@ -1,7 +1,7 @@
 import React from 'react';
-import './Indicators.scss';
 import { useTransition, animated } from 'react-spring';
 import { Zoom } from 'react-awesome-reveal';
+import './Indicators.scss';
 
 interface PropTypes {
   mistakesCounter: number;
@@ -25,10 +25,10 @@ const Indicators: React.FunctionComponent<PropTypes> = (props) => {
 
   return (
     <div className='Indicators'>
-      <Zoom>
+      <Zoom style={{ width: '100%' }}>
         <div className='statistics'>
           <p>
-            Wrong Guesses: {mistakesCounter} of {maxMistakes}
+            Mistakes: {mistakesCounter} of {maxMistakes}
           </p>
           <p>Score: {score}</p>
         </div>

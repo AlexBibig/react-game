@@ -3,7 +3,7 @@
   justify-content: center;
   order: 4;
   flex: 0 1 100%;
-  margin-top: 50px;
+  margin-top: -30px;
   ul {
     display: flex;
     list-style: none;
@@ -26,6 +26,20 @@
     .open-letter {
       span {
         visibility: visible;
+      }
+    }
+  }
+}
+
+@media (max-width: 1050px) {
+  .Answer {
+    order: 3;
+    flex: 0 1 100%;
+    margin-top: 0;
+    ul {
+      li {
+        width: 22px;
+        margin-right: 10px;
       }
     }
   }

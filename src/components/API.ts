@@ -34,6 +34,7 @@ export async function getEuropeanCountries() {
       (el: any) =>
         el.name.length < 15 &&
         el.region === 'Europe' &&
+        el.population > 10000 &&
         /^[a-zA-Z]*$/.test(el.name),
     );
 

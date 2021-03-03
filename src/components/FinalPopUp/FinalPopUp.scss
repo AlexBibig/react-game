@@ -11,4 +11,29 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  background-color: #26a69a;
+  padding: 20px;
+  border-radius: 20px;
+  * {
+    margin: 0;
+    margin-bottom: 20px;
+  }
+  button {
+    margin: 0;
+    padding: 10px;
+    border-radius: 20px;
+    border: none;
+    overflow: hidden;
+    background-color: white;
+    color: black;
+    text-decoration: underline #26a69a;
+    cursor: pointer;
+    transition: 0.5s;
+  }
+  button:hover {
+    transform: scale(1.1);
+  }
+  // h2 {
+  //   margin-bottom: 20px;
+  // }
 }

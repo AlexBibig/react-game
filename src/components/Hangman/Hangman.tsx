@@ -1,8 +1,6 @@
 import React from 'react';
-import './Hangman.scss';
 import { useTransition, animated } from 'react-spring';
 import { Spring } from 'react-spring/renderprops';
-
 import hangman0 from '../../assets/img/Hangman-0.png';
 import hangman1 from '../../assets/img/Hangman-1.png';
 import hangman2 from '../../assets/img/Hangman-2.png';
@@ -11,6 +9,7 @@ import hangman4 from '../../assets/img/Hangman-4.png';
 import hangman5 from '../../assets/img/Hangman-5.png';
 import hangman6 from '../../assets/img/Hangman-6.png';
 import success from '../../assets/img/Success.png';
+import './Hangman.scss';
 
 interface PropTypes {
   mistakesCounter: number;
