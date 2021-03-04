@@ -9,6 +9,7 @@ interface PropTypes {
   mistakesCounter: number;
   maxMistakes: number;
   freeVowels: boolean;
+  launchAutoplay: () => void;
 }
 
 const Keyboard: React.FunctionComponent<PropTypes> = (props) => {
@@ -19,6 +20,7 @@ const Keyboard: React.FunctionComponent<PropTypes> = (props) => {
     maxMistakes,
     remainingLetters,
     freeVowels,
+    launchAutoplay,
   } = props;
 
   const letters: Array<string> = [
@@ -48,6 +50,7 @@ const Keyboard: React.FunctionComponent<PropTypes> = (props) => {
     'x',
     'y',
     'z',
+    'autoplay',
   ];
 
   return (
@@ -56,7 +59,9 @@ const Keyboard: React.FunctionComponent<PropTypes> = (props) => {
         {letters.map((letter: string, index: number) => (
           <button
             key={index}
-            onClick={handleGuess}
+            onClick={
+              letter === 'autoplay' ? launchAutoplay : handleGuess
+            }
             disabled={
               pushedLetters.includes(letter) ||
               mistakesCounter >= maxMistakes ||
@@ -68,7 +73,9 @@ const Keyboard: React.FunctionComponent<PropTypes> = (props) => {
                 : 'consonant'
             }
             className={
-              'btn-floating btn-large waves-effect waves-teal'
+              letter === 'autoplay'
+                ? 'btn-floating btn-large waves-effect waves-teal autoplay'
+                : 'btn-floating btn-large waves-effect waves-teal'
             }
           >
             {letter}

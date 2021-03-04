@@ -18,15 +18,15 @@
     border-radius: 10%;
   }
   img {
-    width: 150px;
-    height: 100px;
+    width: 200px;
+    height: auto;
     position: absolute;
     bottom: 0%;
     left: 50%;
     transform: translate(-50%, -50%);
   }
 }
-@media (max-width: 1050px) {
+@media (max-width: 1150px) {
   .Indicators {
     order: 2;
     flex: 0 1 100%;
@@ -34,20 +34,24 @@
     position: relative;
     img {
       position: absolute;
-      bottom: 0;
+      top: -200px;
+      left: 20px;
       width: 100px;
       height: 70px;
+      transform: translate(0, 0);
     }
     .statistics {
       display: flex;
       justify-content: space-between;
       padding: 0 20px;
       background-color: unset;
+      margin-bottom: 20px;
       > * {
         background-color: #26a69a;
-        padding: 20px;
+        padding: 10px;
         border-radius: 20px;
         width: 30%;
+        font-size: 1rem;
       }
     }
   }

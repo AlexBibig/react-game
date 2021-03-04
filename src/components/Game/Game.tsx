@@ -10,6 +10,7 @@ import './Game.scss';
 import useSound from 'use-sound';
 import selectClick from '../../assets/sounds/selectClick.mp3';
 import clickError from '../../assets/sounds/clickError.mp3';
+import singleClassicClick from '../../assets/sounds/single-classic-click.mp3';
 
 interface PropTypes {
   maxMistakes: number;
@@ -39,12 +40,20 @@ const Game: React.FunctionComponent<PropTypes> = (props) => {
     score: 0,
     pushedLetters: [],
     remainingLetters: [],
+    autoPlay: false,
+    guessedWords: 0,
   });
+
+  const [autoPlay, setAutoPlay] = useState(false);
 
   const [playSuccess] = useSound(selectClick, {
     volume: muted ? 0 : volumeLevel,
   });
   const [playFailure] = useSound(clickError, {
+    volume: muted ? 0 : volumeLevel,
+  });
+
+  const [playAutoPlay] = useSound(singleClassicClick, {
     volume: muted ? 0 : volumeLevel,
   });
 
@@ -74,8 +83,35 @@ const Game: React.FunctionComponent<PropTypes> = (props) => {
     );
   }, [][gameSettings.pushedLetters]);
 
+  useEffect(() => {
+    if (!autoPlay) {
+      return;
+    }
+    const autoPlayTimer = setInterval(() => {
+      setGameSettings((prevState: any) => {
+        return {
+          ...prevState,
+          remainingLetters: prevState.remainingLetters.slice(0, -1),
+          pushedLetters: prevState.pushedLetters.concat(
+            prevState.remainingLetters.slice(
+              prevState.remainingLetters.length - 2,
+              prevState.remainingLetters.length - 1,
+            ),
+          ),
+        };
+      });
+    }, 1000);
+    return () => clearInterval(autoPlayTimer);
+  }, [autoPlay]);
+
+  const launchAutoplay = (): void => {
+    playAutoPlay();
+    setAutoPlay(true);
+  };
+
   const handleGuess = (e: any): void => {
     const letter: string = e.target.innerHTML;
+
     if (gameSettings.remainingLetters.includes(letter)) {
       playSuccess();
       setGameSettings((prevState: any) => {
@@ -110,13 +146,18 @@ const Game: React.FunctionComponent<PropTypes> = (props) => {
 
   const setNewGame = (): void => {
     setCountry();
+
     setGameSettings((prevState: any) => {
       return {
         ...prevState,
         mistakesCounter: 0,
         pushedLetters: [],
+        guessedWords: autoPlay
+          ? prevState.guessedWords
+          : prevState.guessedWords + 1,
       };
     });
+
     if (gameSettings.mistakesCounter >= maxMistakes) {
       setGameSettings((prevState: any) => {
         return {
@@ -125,6 +166,8 @@ const Game: React.FunctionComponent<PropTypes> = (props) => {
         };
       });
     }
+
+    setAutoPlay(false);
   };
 
   const checkGameStatus = () => {
@@ -167,10 +210,12 @@ const Game: React.FunctionComponent<PropTypes> = (props) => {
         maxMistakes={maxMistakes}
         score={gameSettings.score}
         countryFlag={countryFlag}
+        guessedWords={gameSettings.guessedWords}
       />
 
       <Keyboard
         handleGuess={handleGuess}
+        launchAutoplay={launchAutoplay}
         pushedLetters={gameSettings.pushedLetters}
         mistakesCounter={gameSettings.mistakesCounter}
         maxMistakes={maxMistakes}

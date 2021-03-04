@@ -8,10 +8,17 @@ interface PropTypes {
   maxMistakes: number;
   score: number;
   countryFlag: string;
+  guessedWords: number;
 }
 
 const Indicators: React.FunctionComponent<PropTypes> = (props) => {
-  const { mistakesCounter, maxMistakes, score, countryFlag } = props;
+  const {
+    mistakesCounter,
+    maxMistakes,
+    score,
+    countryFlag,
+    guessedWords,
+  } = props;
 
   const transitions = useTransition(
     countryFlag,
@@ -31,13 +38,13 @@ const Indicators: React.FunctionComponent<PropTypes> = (props) => {
             Mistakes: {mistakesCounter} of {maxMistakes}
           </p>
           <p>Score: {score}</p>
+          <p>Guessed countries: {guessedWords}</p>
         </div>
       </Zoom>
 
       <div className='flag'>
         {transitions.map(({ item, props, key }) => (
           <animated.img
-            className='hangman-image'
             key={key}
             style={props}
             src={item}
