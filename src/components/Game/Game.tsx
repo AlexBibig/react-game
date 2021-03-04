@@ -152,9 +152,10 @@ const Game: React.FunctionComponent<PropTypes> = (props) => {
         ...prevState,
         mistakesCounter: 0,
         pushedLetters: [],
-        guessedWords: autoPlay
-          ? prevState.guessedWords
-          : prevState.guessedWords + 1,
+        guessedWords:
+          autoPlay || prevState.mistakesCounter >= maxMistakes
+            ? prevState.guessedWords
+            : prevState.guessedWords + 1,
       };
     });
 
