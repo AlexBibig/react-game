@@ -11,7 +11,7 @@ const App: React.FC = () => {
   const [countriesArr, setCoutnriesArr] = useState([]);
 
   const [keyWord, setKeyWord] = useState<KeyWordTypes>({
-    countryName: 'none',
+    countryName: '',
     countryFlag: '',
   });
 
@@ -39,10 +39,6 @@ const App: React.FC = () => {
     getAllCountries().then((countries: any) =>
       setCoutnriesArr(countries),
     );
-
-    if (countriesArr.length) {
-      getNewCountry();
-    }
   }, []);
 
   useEffect(() => {
@@ -120,8 +116,6 @@ const App: React.FC = () => {
       };
     });
   };
-
-  console.log(countriesArr);
 
   return (
     <div className='App'>
