@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import Hangman from '../Hangman';
 import Keyboard from '../Keyboard';
 import Answer from '../Answer';
@@ -52,12 +52,11 @@ const Game: React.FunctionComponent<PropTypes> = (props) => {
   const [playFailure] = useSound(clickError, {
     volume: muted ? 0 : volumeLevel,
   });
-
   const [playAutoPlay] = useSound(singleClassicClick, {
     volume: muted ? 0 : volumeLevel,
   });
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setGameSettings((prevState: any) => {
       return {
         ...prevState,
@@ -67,21 +66,6 @@ const Game: React.FunctionComponent<PropTypes> = (props) => {
       };
     });
   }, [countryName]);
-
-  useEffect(() => {
-    const gameSettings: any =
-      localStorage.getItem('gameSettings') || null;
-    if (gameSettings) {
-      setGameSettings(JSON.parse(gameSettings));
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem(
-      'gameSettings',
-      JSON.stringify(gameSettings),
-    );
-  }, [][gameSettings.pushedLetters]);
 
   useEffect(() => {
     if (!autoPlay) {

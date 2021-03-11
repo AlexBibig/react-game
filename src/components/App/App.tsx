@@ -1,82 +1,74 @@
-import React, { useState, useLayoutEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Game from '../Game';
 import PauseMenu from '../PauseMenu';
-import Footer from '../Footer';
-import Header from '../Header';
-import { getAllCountries, getEuropeanCountries } from '../API';
+import { getAllCountries } from '../API';
 import './App.scss';
+import { DefaultSettingsTypes, KeyWordTypes } from '../types';
+import mainTheme from '../../assets/sounds/main.mp3';
+import useSound from 'use-sound';
 
-interface defaultSettingsTypes {
-  gamePaused: boolean;
-  easyMode: boolean;
-  freeVowels: boolean;
-  europeanCountries: boolean;
-  volume: number;
-  muted: boolean;
-  music: boolean;
-}
+const App: React.FC = () => {
+  const [countriesArr, setCoutnriesArr] = useState([]);
 
-const App: React.FunctionComponent = () => {
-  const [
-    defaultSettings,
-    setDefaultSettings,
-  ] = useState<defaultSettingsTypes>(() => {
-    return {
-      gamePaused: true,
-      easyMode: true,
-      freeVowels: true,
-      europeanCountries: false,
-      volume: 1,
-      muted: false,
-      music: true,
-    };
-  });
-
-  const [keyWord, setKeyWord] = useState<any>({
+  const [keyWord, setKeyWord] = useState<KeyWordTypes>({
     countryName: 'none',
     countryFlag: '',
   });
 
+  const [
+    defaultSettings,
+    setDefaultSettings,
+  ] = useState<DefaultSettingsTypes>(() => {
+    return {
+      gamePaused: true,
+      easyMode: true,
+      freeVowels: true,
+      volume: 1,
+      muted: false,
+      music: false,
+    };
+  });
+
   const maxMistakes: number = defaultSettings.easyMode ? 6 : 4;
 
-  useLayoutEffect(() => {
-    const keyWord: any = localStorage.getItem('keyWord') || null;
-    if (keyWord) {
-      setKeyWord(JSON.parse(keyWord));
-    } else {
-      setCountry();
-      localStorage.clear();
-    }
-    const defaultSettings: any =
-      localStorage.getItem('defaultSettings') || null;
-    if (defaultSettings) {
-      setDefaultSettings(JSON.parse(defaultSettings));
+  const [playMainTheme, { stop }] = useSound(mainTheme, {
+    volume: defaultSettings.muted ? 0 : defaultSettings.volume,
+  });
+
+  useEffect(() => {
+    getAllCountries().then((countries: any) =>
+      setCoutnriesArr(countries),
+    );
+
+    if (countriesArr.length) {
+      getNewCountry();
     }
   }, []);
 
-  useLayoutEffect(() => {
-    localStorage.setItem(
-      'defaultSettings',
-      JSON.stringify(defaultSettings),
-    );
-    localStorage.setItem('keyWord', JSON.stringify(keyWord));
-  }, [defaultSettings, keyWord]);
+  useEffect(() => {
+    if (defaultSettings.music === true) {
+      playMainTheme();
+    } else {
+      stop();
+    }
+  }, [defaultSettings.music]);
 
-  const setCountry = async () => {
-    const getCountry = !defaultSettings.europeanCountries
-      ? getAllCountries
-      : getEuropeanCountries;
+  const getNewCountry = (array: any = countriesArr): void => {
+    const country =
+      array[Math.floor(Math.random() * countriesArr.length)];
 
-    await getCountry().then((country) => {
-      setKeyWord({
-        countryName: country.name.trim().toLowerCase(),
-        countryFlag: country.flag,
-      });
+    setKeyWord({
+      countryName: country.name.trim().toLowerCase(),
+      countryFlag: country.flag,
+    });
+
+    setCoutnriesArr((prev) => {
+      return prev.filter((el) => el !== country);
     });
   };
 
-  const setVolumeLevel = (value: any) => {
-    setDefaultSettings((prevState: defaultSettingsTypes) => {
+  const setVolumeLevel = (value: number): void => {
+    setDefaultSettings((prevState: DefaultSettingsTypes) => {
       return {
         ...prevState,
         volume: value,
@@ -84,8 +76,8 @@ const App: React.FunctionComponent = () => {
     });
   };
 
-  const setMuted = () => {
-    setDefaultSettings((prevState: defaultSettingsTypes) => {
+  const setMuted = (): void => {
+    setDefaultSettings((prevState: DefaultSettingsTypes) => {
       return {
         ...prevState,
         muted: !prevState.muted,
@@ -93,8 +85,8 @@ const App: React.FunctionComponent = () => {
     });
   };
 
-  const setMusic = () => {
-    setDefaultSettings((prevState: defaultSettingsTypes) => {
+  const setMusic = (): void => {
+    setDefaultSettings((prevState: DefaultSettingsTypes) => {
       return {
         ...prevState,
         music: !prevState.music,
@@ -102,8 +94,8 @@ const App: React.FunctionComponent = () => {
     });
   };
 
-  const toggleGamePause = () => {
-    setDefaultSettings((prevState: defaultSettingsTypes) => {
+  const toggleGamePause = (): void => {
+    setDefaultSettings((prevState: DefaultSettingsTypes) => {
       return {
         ...prevState,
         gamePaused: !prevState.gamePaused,
@@ -111,8 +103,8 @@ const App: React.FunctionComponent = () => {
     });
   };
 
-  const toggleFreeVowels = () => {
-    setDefaultSettings((prevState: defaultSettingsTypes) => {
+  const toggleFreeVowels = (): void => {
+    setDefaultSettings((prevState: DefaultSettingsTypes) => {
       return {
         ...prevState,
         freeVowels: !prevState.freeVowels,
@@ -120,8 +112,8 @@ const App: React.FunctionComponent = () => {
     });
   };
 
-  const toggleEasyMode = () => {
-    setDefaultSettings((prevState: defaultSettingsTypes) => {
+  const toggleEasyMode = (): void => {
+    setDefaultSettings((prevState: DefaultSettingsTypes) => {
       return {
         ...prevState,
         easyMode: !prevState.easyMode,
@@ -129,28 +121,18 @@ const App: React.FunctionComponent = () => {
     });
   };
 
-  const toggleEuropeanCountries = () => {
-    setDefaultSettings((prevState: defaultSettingsTypes) => {
-      return {
-        ...prevState,
-        europeanCountries: !prevState.europeanCountries,
-      };
-    });
-  };
+  console.log(countriesArr);
 
   return (
     <div className='App'>
-      <Header
-        toggleGamePause={toggleGamePause}
-        volumeLevel={defaultSettings.volume}
-        setVolumeLevel={setVolumeLevel}
-        setMuted={setMuted}
-        muted={defaultSettings.muted}
-        music={defaultSettings.music}
-        setMusic={setMusic}
-      />
-
       <main className='container'>
+        <button
+          onClick={toggleGamePause}
+          className=' btn-large btn-floating waves-effect waves-light btn button-pause'
+        >
+          <i className='material-icons'>not_started</i>
+        </button>
+
         {!defaultSettings.gamePaused ? (
           <Game
             countryName={keyWord.countryName}
@@ -158,25 +140,27 @@ const App: React.FunctionComponent = () => {
             maxMistakes={maxMistakes}
             easyMode={defaultSettings.easyMode}
             freeVowels={defaultSettings.freeVowels}
-            setCountry={setCountry}
             volumeLevel={defaultSettings.volume}
             muted={defaultSettings.muted}
+            setCountry={getNewCountry}
           />
         ) : (
           <PauseMenu
-            toggleEasyMode={toggleEasyMode}
-            toggleFreeVowels={toggleFreeVowels}
-            toggleEuropeanCountries={toggleEuropeanCountries}
-            toggleGamePause={toggleGamePause}
-            setCountry={setCountry}
             easyMode={defaultSettings.easyMode}
             freeVowels={defaultSettings.freeVowels}
-            europeanCountries={defaultSettings.europeanCountries}
+            volumeLevel={defaultSettings.volume}
+            muted={defaultSettings.muted}
+            music={defaultSettings.music}
+            toggleEasyMode={toggleEasyMode}
+            toggleFreeVowels={toggleFreeVowels}
+            toggleGamePause={toggleGamePause}
+            setCountry={getNewCountry}
+            setVolumeLevel={setVolumeLevel}
+            setMuted={setMuted}
+            setMusic={setMusic}
           />
         )}
       </main>
-
-      <Footer />
     </div>
   );
 };
