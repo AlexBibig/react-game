@@ -1,0 +1,45 @@
+.Answer {
+  display: flex;
+  justify-content: center;
+  order: 4;
+  flex: 0 1 100%;
+  margin-top: -30px;
+  ul {
+    display: flex;
+    list-style: none;
+    flex-wrap: wrap;
+    li {
+      border-bottom: 2px solid black;
+      width: 30px;
+      margin-right: 20px;
+      display: flex;
+      justify-content: center;
+      span {
+        font-size: 2rem;
+      }
+    }
+    .closed-letter {
+      span {
+        visibility: hidden;
+      }
+    }
+    .open-letter {
+      span {
+        visibility: visible;
+      }
+    }
+  }
+}
+
+@media (max-width: 1150px) {
+  .Answer {
+    order: 3;
+    flex: 0 1 100%;
+    ul {
+      li {
+        width: 22px;
+        margin-right: 10px;
+      }
+    }
+  }
+}

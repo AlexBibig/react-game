@@ -1,0 +1,15 @@
+.Game {
+  position: relative;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 50px;
+}
+@media (max-width: 1050px) {
+  .Game {
+    padding: 20px;
+    justify-content: flex-end;
+  }
+}
